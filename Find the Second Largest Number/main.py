@@ -1,32 +1,25 @@
+#Find the Second Largest Number
 #coding=utf-8
-import random
-
-def find(first, last, k, array):
-    if k < first or k >= last:
-        return -1
-
-    #生成一个随机交换位置
-    index = random.randrange(first, last);
-
-    array[first], array[index] = array[index], array[first]
-
-    count = 0
-    cnt = first
-    
-    for i in xrange(first, last):
-        if array[first] < array[i]:
-            
-            
-            
-    return index
-    
 
 def main():
-
     N = input()
     text = raw_input()
-    numlist = list(map(int, text.split(" ")))
-    print find(0, len(numlist), 2, numlist)
+
+    numlist = list(set(map(int, text.split(" "))))
+
+    listlen = len(numlist)
+    for i in xrange(2):
+        for j in xrange(i + 1, listlen):
+            if numlist[i] < numlist[j]:
+                numlist[i], numlist[j] = numlist[j],numlist[i]
+    print numlist[1]
+    '''
+    for i in xrange(1, listlen):
+        if numlist[i] == numlist[0]:
+            continue
+        print numlist[i]
+        break
+    '''
     
 
 if __name__ == "__main__":

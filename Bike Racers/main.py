@@ -22,7 +22,7 @@ for i in xrange(N):
     Graph[i].sort()
     #print Graph[i]
 
-MinDis = [10**10]
+MinDis = [10**12]
 usedx = [0 for _ in xrange(N)]
 usedy = [0 for _ in xrange(M)]
 
@@ -32,12 +32,14 @@ def DFS(choiceK, curDis):
         if curDis < MinDis[0]:
             MinDis[0] = curDis
         return
-    if curDis > MinDis[0]:
+    if curDis >= MinDis[0]:
         return
     for i in xrange(N):
         if usedx[i] == 1:
             continue
         for j in xrange(M):
+            if j >= K:
+                break
             if usedy[j] == 1:
                 continue
             usedx[i] = 1
@@ -50,4 +52,3 @@ def DFS(choiceK, curDis):
             usedy[j] = 0
 DFS(0, 0)
 print MinDis[0] ** 2
-
