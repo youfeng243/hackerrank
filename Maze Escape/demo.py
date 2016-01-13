@@ -1,10 +1,12 @@
 import os
 import copy
 
-class Robot:
+class Robot(object):
     def __init__(self, graph):
         self.graph = copy.deepcopy(graph)
+    
         
+    
     def Print(self):
         for i in self.graph:
             print i
@@ -16,7 +18,7 @@ def main():
         text = raw_input().strip()
         graph.append(list(text))    
     robot = Robot(graph)
-    robot.Print()
+    #robot.Print()
     
 
 if __name__ == "__main__":
