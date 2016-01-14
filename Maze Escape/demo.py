@@ -2,6 +2,7 @@
 
 import os
 import copy
+from collections import deque
 
 #有关地图信息的类
 class Graph(object):
@@ -20,6 +21,7 @@ class Graph(object):
     
     #当前需要移动的目标
     DESTFLAG = "d"
+    
     
     #存储地图的位置
     FILEPATH = r"./graph.txt"
@@ -58,8 +60,8 @@ class Graph(object):
             for j in xrange( y - 1, y + 2 ):
                 if self.bigmap[i][j] == Graph.ROBOTFLAG:
                     continue
-                if self.bigmap[i][j] == Graph.DESTFLAG:
-                    continue
+                #if self.bigmap[i][j] == Graph.DESTFLAG and graph[i - (x - 1)][j - (y - 1)] != "#":
+                #    continue
                 self.bigmap[i][j] = graph[i - (x - 1)][j - (y - 1)]
     
     #设置机器人位置
@@ -74,8 +76,8 @@ class Graph(object):
     def setDestPosition( self, x, y ):
         tempx, tempy = self.findDest()
         if tempx != -1 and tempy != -1:
-            self.bigmap[tempx][tempy] = "-"
-        self.bigmap[x][y] = "d"
+            self.bigmap[tempx][tempy] = "?"
+        self.bigmap[x][y] = Graph.DESTFLAG
         
     #查找机器人位置
     def findRobot(self):
@@ -128,19 +130,27 @@ class Graph(object):
                 temp[i][j] = self.bigmap[Graph.MAX_ROW - i - 1][Graph.MAX_COL - j - 1]
         self.bigmap = copy.deepcopy(temp)
     
+    
     #旋转地图
     def rotateGraph( self, dirs ):
         if dirs == "UP":
             return
         if dirs == "DOWN":
-            rotateDown()
+            self.rotateDown()
             return
         if dirs == "RIGHT":
-            rotateRight()
+            self.rotateRight()
             return
         if dirs == "LEFT":
-            rotateLeft()
+            self.rotateLeft()
             return
+        
+    #获得位置信息
+    def getPosition( self, x, y ):
+        if x < 0 or y < 0 or x >= Graph.MAX_ROW or y >= Graph.MAX_COL:
+            raise Exception("查找位置错误")
+            return '@'
+        return self.bigmap[x][y]
         
     #地图文本化存储 注意添加换行符 返回纯文本
     def graphSerialization(self):
@@ -156,7 +166,7 @@ class Memory(object):
         
     #保存信息
     def saveMemory(self, text, fileName):
-        file = open(filename, "w")
+        file = open(fileName, "w")
         file.writelines(text)
         file.close()
     
@@ -190,7 +200,9 @@ class Robot(object):
         if doorx != -1 and doory != -1:
             #重新设置目标位置
             self.graph.setDestPosition(doorx, doory)
-            
+        
+        #print doorx, doory 
+        
         #找到目标位置
         destx, desty = self.graph.findDest()
         if destx == -1 and desty == -1:
@@ -200,11 +212,13 @@ class Robot(object):
             #记录目标点 下次走的时候继续往这个目标点前进
             self.graph.setDestPosition(destx, desty)
         
+        #print destx, desty
+        
         #根据目标位置查找一个当前要走的方向
-        dirs = robotBFS( destx, desty )
+        dirs = self.robotBFS( destx, desty )
         
         #根据方向输出机器人移动位置
-        x, y = moveRobot( dirs )
+        x, y = self.moveRobot( dirs )
         
         #重新设置机器人位置
         self.graph.setRobotPosition(x, y)
@@ -221,28 +235,158 @@ class Robot(object):
     
     #探索离它最近的未知区域，这里已经判断过门的位置，以及目标位置，这里产生目标位置
     def robotfindDest(self):
-        destx = -1
-        desty = -1
         
-        unknownPosition = []
-        raise Exception("为完成")
-    
+        #移动的方向
+        side = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        
+        #访问过标记
+        used = [[0 for i in xrange(Graph.MAX_COL)]for j in xrange(Graph.MAX_ROW)]
+        
+        #找到机器人当前位置
+        startx, starty = self.graph.findRobot()
+        used[startx][starty] = 1
+        
+        #遍历队列
+        queue = deque([])
+        
+        #添加首个位置
+        queue.append((startx, starty))
+        
+        while len(queue) > 0:
+            tempx, tempy = queue.popleft()
+            if self.graph.getPosition(tempx, tempy) == '?':
+                return tempx, tempy
+            for i in side:
+                willx = tempx + i[0]
+                willy = tempy + i[1]
+                if willx < 0 or willx >= self.graph.MAX_ROW or willy < 0 or willy >= self.graph.MAX_COL:
+                    continue
+                if self.graph.getPosition(willx, willy) == '#':
+                    continue
+                if used[willx][willy] == 1:
+                    continue
+                used[willx][willy] = 1
+                queue.append((willx, willy))
+        
+        raise Exception("没有找到可以移动的目标")
+        return -1, -1
     
     #寻路算法
-    def robotBFS( destx, desty ):
-        raise Exception("未完成功能")
-        return "DOWN"
+    def robotBFS( self, destx, desty ):
+        
+        #移动的方向
+        side = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        
+        #访问路径标记
+        parent = [[[-1, -1] for i in xrange(Graph.MAX_COL)] for j in xrange(Graph.MAX_ROW)]
+        
+        #访问过标记
+        used = [[0 for i in xrange(Graph.MAX_COL)] for j in xrange(Graph.MAX_ROW)]
+        
+        #找到机器人当前位置
+        startx, starty = self.graph.findRobot()
+        used[startx][starty] = 1
+        
+        #print "startx = ", startx
+        #print "starty = ", starty
+        #print "destx = ", destx
+        #print "desty = ", desty
+        
+        
+        #遍历队列
+        queue = deque([])
+        
+        #添加首个位置
+        queue.append((startx, starty))
+        
+        find = False
+        while len(queue) > 0:
+            tempx, tempy = queue.popleft()
+            if tempx == destx and tempy == desty:
+                find = True
+                break
+            for i in side:
+                willx = tempx + i[0]
+                willy = tempy + i[1]
+                if willx < 0 or willx >= self.graph.MAX_ROW or willy < 0 or willy >= self.graph.MAX_COL:
+                    continue
+                if self.graph.getPosition(willx, willy) == '#':
+                    continue
+                if used[willx][willy] == 1:
+                    continue
+                used[willx][willy] = 1
+                
+                parent[willx][willy][0] = tempx
+                parent[willx][willy][1] = tempy
+                
+                queue.append((willx, willy))
+            #print queue
+            
+        if find == False:
+            raise Exception("未知错误，没有找到目标")
+            return "ERROR"
+        
+        #print "run here"
+        #print "startx = ", startx
+        #print "starty = ", starty
+        #print "destx = ", destx
+        #print "desty = ", desty
+        
+        path = []
+        while True:
+            path.append((destx, desty))
+            #print path
+            if parent[destx][desty][0] == startx and parent[destx][desty][1] == starty:
+                break
+            
+            #print "parent[destx][desty][0] = ", parent[destx][desty][0]
+            #print "parent[destx][desty][1] = ", parent[destx][desty][1]
+            #print "startx = ", startx
+            #print "starty = ", starty
+            
+            tempx = parent[destx][desty][0]
+            tempy = parent[destx][desty][1]
+            destx = tempx
+            desty = tempy
+            
+        path.reverse()
+        
+        if len(path) == 0:
+            raise Exception("没有找到路径")
+            return "ERROR"
+        
+        dirs = self.getDirection( startx, starty, path[0][0], path[0][1] )
+        return dirs
+    
+    #获得方向
+    def getDirection( self, startx, starty, findx, findy ):
+        if findx == startx:
+            if findy > starty:
+                return "RIGHT"
+            elif findy < starty:
+                return "LEFT"
+            else:
+                raise Exception("无法判断方向")
+        elif findy == starty:
+            if findx > startx:
+                return "DOWN"
+            elif findx < startx:
+                return "UP"
+            else:
+                raise Exception("无法判断方向")
+        raise Exception("无法判断方向 findx != startx findy != starty")
+        return
     
     #移动机器人
     def moveRobot( self, dirs ):
         if dirs == "DOWN":
-            return moveRobot()
+            return self.moveDown()
         if dirs == "UP":
-            return moveRobot()
+            return self.moveUp()
         if dirs == "LEFT":
-            return moveLeft()
+            return self.moveLeft()
         if dirs == "RIGHT":
-            return moveRight()
+            return self.moveRight()
             
         raise Exception("move Robot Error")
         return "ERROR"
