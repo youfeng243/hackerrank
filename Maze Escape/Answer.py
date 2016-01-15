@@ -20,11 +20,11 @@ class Graph(object):
     DOORFLAG = "e"
     
     #当前需要移动的目标
-    DESTFLAG = "d"
+    #DESTFLAG = "d"
     
     
     #存储地图的位置
-    FILEPATH = r"./graph.txt"
+    FILEPATH = r"./graph11.txt"
     
     def __init__(self, graph):
         self.bigmap = [["?" for _ in xrange(Graph.MAX_COL)] for _ in xrange(Graph.MAX_ROW)]
@@ -73,11 +73,13 @@ class Graph(object):
         self.bigmap[x][y] = Graph.ROBOTFLAG
         
     #设置目标位置
+    '''
     def setDestPosition( self, x, y ):
         tempx, tempy = self.findDest()
         if tempx != -1 and tempy != -1:
             self.bigmap[tempx][tempy] = "?"
         self.bigmap[x][y] = Graph.DESTFLAG
+    '''
         
     #查找机器人位置
     def findRobot(self):
@@ -96,12 +98,14 @@ class Graph(object):
         return -1, -1
     
     #查找移动目标的位置
+    '''
     def findDest(self):
         for i in xrange( Graph.MAX_ROW ):
             for j in xrange( Graph.MAX_COL ):
                 if self.bigmap[i][j] == Graph.DESTFLAG:
                     return i,j
         return -1, -1
+    '''
     
     #机器人向右旋转
     def rotateRight(self):
@@ -195,22 +199,29 @@ class Robot(object):
     #做决策
     def makeDecision(self):
         
+        destx = -1
+        desty = -1
+        
         #先判断门是否已经出现了
         doorx, doory = self.graph.findDoor()
         if doorx != -1 and doory != -1:
             #重新设置目标位置
-            self.graph.setDestPosition(doorx, doory)
-        
+            #self.graph.setDestPosition(doorx, doory)
+            destx = doorx
+            desty = doory
+        else:
+            destx, desty = self.robotfindDest()
+            
         #print doorx, doory 
         
         #找到目标位置
-        destx, desty = self.graph.findDest()
-        if destx == -1 and desty == -1:
+        #destx, desty = self.graph.findDest()
+        #if destx == -1 and desty == -1:
             #如果当前还没有目标位置 则找到一个最近的目标位置
-            destx, desty = self.robotfindDest()
+            #destx, desty = self.robotfindDest()
             
             #记录目标点 下次走的时候继续往这个目标点前进
-            self.graph.setDestPosition(destx, desty)
+            #self.graph.setDestPosition(destx, desty)
         
         #print destx, desty
         
