@@ -42,7 +42,6 @@ class Tree( object ):
         self.insert( root * 2 + 2, mid + 1, end, istart, iend, cnt )
         
         self.Nodes[root].cnt = max( self.Nodes[root * 2 + 1].cnt, self.Nodes[root * 2 + 2].cnt )
-        
         return self.Nodes[root].cnt
         
 def main():
