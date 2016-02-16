@@ -24,6 +24,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="Java If-Else" />
+        <module name="Java Loops" />
         <module name="Java Output Formatting" />
         <module name="Java Stdin and Stdout 1" />
         <module name="Java Stdin and Stdout 2" />
@@ -34,6 +35,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
       <module name="Java If-Else" target="1.8" />
+      <module name="Java Loops" target="1.8" />
       <module name="Java Output Formatting" target="1.8" />
       <module name="Java Stdin and Stdout 2" target="1.8" />
       <module name="Java.Stdin.and.Stdout.1" target="1.8" />
