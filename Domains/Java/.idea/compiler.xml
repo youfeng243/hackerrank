@@ -23,13 +23,21 @@
         <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="Java If-Else" />
+        <module name="Java Output Formatting" />
         <module name="Java Stdin and Stdout 1" />
+        <module name="Java Stdin and Stdout 2" />
+        <module name="Java.Stdin.and.Stdout.1" />
         <module name="Welcome to Java" />
+        <module name="Welcome.to.Java" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Java Stdin and Stdout 1" target="1.5" />
-      <module name="Welcome to Java" target="1.5" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="Java If-Else" target="1.8" />
+      <module name="Java Output Formatting" target="1.8" />
+      <module name="Java Stdin and Stdout 2" target="1.8" />
+      <module name="Java.Stdin.and.Stdout.1" target="1.8" />
+      <module name="Welcome.to.Java" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

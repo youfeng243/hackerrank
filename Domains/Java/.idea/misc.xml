@@ -49,6 +49,9 @@
       <list>
         <option value="$PROJECT_DIR$/Welcome to Java/pom.xml" />
         <option value="$PROJECT_DIR$/Java Stdin and Stdout 1/pom.xml" />
+        <option value="$PROJECT_DIR$/Java If-Else/pom.xml" />
+        <option value="$PROJECT_DIR$/Java Stdin and Stdout 2/pom.xml" />
+        <option value="$PROJECT_DIR$/Java Output Formatting/pom.xml" />
       </list>
     </option>
   </component>
@@ -64,22 +67,5 @@
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
-  </component>
-  <component name="SbtLocalSettings">
-    <option name="modificationStamps">
-      <map>
-        <entry key="D:/gitspace/akka" value="59059323490924" />
-        <entry key="D:/workspace/idea/play-java-intro" value="1445855429199" />
-        <entry key="E:/AkkaHttpCode/akka-http-json-master" value="7253862895000" />
-        <entry key="E:/JavaCode/akka-sample-http-stream" value="1450924926672" />
-        <entry key="E:/JavaCode/longshengDemo" value="1450953024435" />
-        <entry key="E:/JavaCode/play-java-2.3" value="1450747596278" />
-        <entry key="E:/JavaCode/reactive-stocks" value="1450745848321" />
-        <entry key="E:/JavaCode/tlh-seed" value="1450750672090" />
-      </map>
-    </option>
-    <option name="externalProjectsViewState">
-      <projects_view />
-    </option>
   </component>
 </project>
